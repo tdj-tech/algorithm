@@ -73,7 +73,7 @@ public class AddSubMulAndDivImp {
      * @param  a , 被除数 b
      * @return div 值
      */
-    public static int div(int a, int b) {
+    public static int divite(int a, int b) {
         int ans = 0;
         int posA = isPositive(a) ? a : opposite(a);
         int posB = isPositive(b) ? b : opposite(b);
@@ -84,6 +84,33 @@ public class AddSubMulAndDivImp {
             }
         }
         return isPositive(a) ^ isPositive(b) ? opposite(ans) : ans;
+    }
+
+    /**
+     * 除法
+     * 有些边界条件 1：a和b都是最小值，返回1
+     *             2：a是最小值，b不是，因为a是最小值，它的绝对值数超过了int的最大值，故需采取其他处理
+     *             先令a + 1，然后除b得到c，再d=a-(b*c)，最终结果=c+ d/b
+     *             3：a不是最小值，b是，返回0
+     *             4：a和b都不是最小值，返回div(a, b)
+     * @param
+     * @return
+     */
+    public static int div(int a, int b) {
+        if (a == Integer.MIN_VALUE && b == Integer.MIN_VALUE) {
+            return 1;
+        } else if (b == Integer.MIN_VALUE) {
+            return 0;
+        } else if (a == Integer.MIN_VALUE) {
+            if (b == opposite(1)) {
+                return Integer.MAX_VALUE;
+            }
+            int c = divite(add(a, 1), b);
+            int d = sub(a, mul(b, c));
+            return add(c, divite(d, b));
+        } else {
+            return divite(a, b);
+        }
     }
 
     public static boolean isPositive(int a) {
